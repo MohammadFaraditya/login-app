@@ -18,9 +18,9 @@
                             </div>
                             <div class="mb-3">
                                 <label for="selectRole" class="form-label">Role</label>
-                                <select name="selectRole" id="selectRole" class="form-control">
+                                <select name="selectRole[]" id="selectRole" class="form-control" multiple>
                                     @foreach ($role as $role)
-                                        <option>{{ $role->name }}</option>
+                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('selectRole')

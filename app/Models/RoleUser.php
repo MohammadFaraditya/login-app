@@ -11,8 +11,8 @@ class RoleUser extends Model
     protected $table = 'model_has_roles';
 
     protected $fillable = [
-        'id',
-        'name',
-        'guard_name',
+        'role_id',
+        'model_type',
+        'model_id',
     ];
 }

@@ -44,16 +44,25 @@
                                                             <td>{{ $user->username }}</td>
                                                             <td>{{ implode(', ', $user->getRoleNames()->toArray()) }}</td>
                                                             <td>
+                                                                <!-- Edit Button -->
                                                                 <a href="#" class="btn btn-warning a-btn-slide-text">
                                                                     <span class="glyphicon glyphicon-edit"
                                                                         aria-hidden="true"></span>
                                                                     <span><strong>Edit</strong></span>
                                                                 </a>
-                                                                <a href="#" class="btn btn-danger a-btn-slide-text">
-                                                                    <span class="glyphicon glyphicon-remove"
-                                                                        aria-hidden="true"></span>
-                                                                    <span><strong>Delete</strong></span>
-                                                                </a>
+
+                                                                <!-- Delete Button -->
+                                                                <form action="{{ route('DeleteUser', $user->id) }}"
+                                                                    method="POST" style="display:inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger a-btn-slide-text">
+                                                                        <span class="glyphicon glyphicon-remove"
+                                                                            aria-hidden="true"></span>
+                                                                        <span><strong>Delete</strong></span>
+                                                                    </button>
+                                                                </form>
                                                             </td>
                                                         </tr>
                                                     @endforeach

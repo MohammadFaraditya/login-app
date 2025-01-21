@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,11 +18,12 @@ class CRUDuserController extends Controller
 
     public function AddUser(Request $request)
     {
-        // Validasi input tanpa validasi unik
+        // Validasi input
         $validator = Validator::make($request->all(), [
-            'username'   => 'required',
-            'selectRole' => 'required',
-            'password'   => 'required|min:6',
+            'username'     => 'required',
+            'selectRole'   => 'required|array',    // Pastikan selectRole adalah array
+            'selectRole.*' => 'exists:roles,name', // Pastikan setiap role ada di database
+            'password'     => 'required|min:6',
         ]);
 
         if ($validator->fails()) {
@@ -43,16 +45,32 @@ class CRUDuserController extends Controller
         // Buat pengguna baru
         $user = User::create($data);
 
-                                          // Assign role ke user
-        $roleName = $request->selectRole; // Role dari input
-        $role     = Role::where('name', $roleName)->first();
-
-        if ($role) {
-            $user->assignRole($roleName); // Memberikan role ke user
-        } else {
-            return redirect()->back()->with('error', 'Role tidak ditemukan!');
+        // Menangani assign multiple role
+        foreach ($request->selectRole as $roleName) {
+            $role = Role::where('name', $roleName)->first();
+            if ($role) {
+                $user->assignRole($roleName); // Menambahkan role ke user
+            }
         }
 
         return redirect('dashboard')->with('success', 'User berhasil ditambahkan!');
     }
+
+    public function DeleteUser($id)
+    {
+        // Cari user berdasarkan ID
+        $user = User::find($id);
+        if (! $user) {
+            return redirect()->route('dashboard')->with('error', 'User tidak ditemukan.');
+        }
+
+        // Hapus hubungan user dengan role di tabel pivot (model_has_roles)
+        RoleUser::where('model_id', $id)->delete();
+
+        // Hapus user
+        $user->delete();
+
+        return redirect()->route('dashboard')->with('success', 'User berhasil dihapus.');
+    }
+
 }
