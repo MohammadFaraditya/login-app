@@ -1,0 +1,21 @@
+
+# Laravel
+/vendor/
+/node_modules/
+.env
+.phpunit.result.cache
+/storage/*.key
+/public/storage
+/public/hot
+/public/build
+/public/mix-manifest.json
+
+# IDE Specific
+.idea/
+.vscode/
+*.iml
+
+# System Files
+.DS_Store
+Thumbs.db
+
