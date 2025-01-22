@@ -12,28 +12,34 @@
                                 <div class="table-responsive" style="overflow: hidden;">
                                     <div class="table-wrapper">
                                         <div class="table-title mb-4">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <h2>Users</h2>
+                                            <div class="row align-items-center mb-4">
+                                                <div class="col d-flex align-items-center">
+                                                    <h2 class="me-3 mb-0">Users</h2>
+                                                    <a href="{{ route('ShowFormAddUser') }}">
+                                                        <button type="button" class="btn btn-info add-new">
+                                                            <i class="fa fa-plus"></i> Add New
+                                                        </button>
+                                                    </a>
                                                 </div>
-                                                <div class="col-2">
-                                                    <a href="{{ route('ShowFormAddUser') }}"><button type="button"
-                                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Add
-                                                            New</button></a>
+                                                <div class="col-auto ms-auto">
+                                                    {{-- Search Form --}}
+                                                    <form method="GET" action="{{ route('dashboard') }}" class="d-flex">
+                                                        <input type="search" name="search" id="search-focus"
+                                                            class="form-control me-2" style="width: 50%;"
+                                                            placeholder="Search " value="{{ request()->get('search') }}">
+                                                        <button type="submit" class="btn btn-primary me-2">Search</button>
+                                                        @if (request()->has('search') && request()->get('search') !== '')
+                                                            <a href="{{ route('dashboard') }}"
+                                                                class="btn btn-secondary">Reset</a>
+                                                        @endif
+                                                    </form>
                                                 </div>
                                             </div>
-                                            <div class="input-group mb-4">
-                                                <div class="form-outline" data-mdb-input-init>
-                                                    <input id="search-focus" type="search" id="form1"
-                                                        class="form-control" />
-                                                </div>
-                                                <button type="button" class="btn btn-primary"
-                                                    data-mdb-ripple-init>Search</button>
-                                            </div>
+
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>Name</th>
+                                                        <th>Username</th>
                                                         <th>Email</th>
                                                         <th>Role</th>
                                                         <th>Actions</th>
@@ -42,20 +48,21 @@
                                                 <tbody>
                                                     @foreach ($users as $user)
                                                         <tr>
-                                                            <td>{{ $user->name }}</td>
+                                                            <td>{{ $user->username }}</td>
                                                             <td>{{ $user->email }}</td>
                                                             <td>{{ implode(', ', $user->getRoleNames()->toArray()) }}</td>
                                                             <td>
-                                                                <a href="#" class="btn btn-warning a-btn-slide-text">
-                                                                    <span class="glyphicon glyphicon-edit"
-                                                                        aria-hidden="true"></span>
-                                                                    <span><strong>Edit</strong></span>
+                                                                <a href="{{ route('ShowFormEditUser', $user->id) }}"
+                                                                    class="btn btn-warning">
+                                                                    Edit
                                                                 </a>
-                                                                <a href="#" class="btn btn-danger a-btn-slide-text">
-                                                                    <span class="glyphicon glyphicon-remove"
-                                                                        aria-hidden="true"></span>
-                                                                    <span><strong>Delete</strong></span>
-                                                                </a>
+                                                                <form action="{{ route('DeleteUser', $user->id) }}"
+                                                                    method="POST" style="display:inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger">Delete</button>
+                                                                </form>
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -71,12 +78,22 @@
             </div>
         </div>
     </div>
+    {{-- Success and Error Alerts --}}
     @if (session('success'))
         <script>
             Swal.fire({
                 title: "{{ session('success') }}",
                 icon: "success",
                 draggable: true
+            });
+        </script>
+    @endif
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "{{ session('error') }}",
             });
         </script>
     @endif

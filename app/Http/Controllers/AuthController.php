@@ -17,12 +17,12 @@ class AuthController extends Controller
     {
         // validation input
         $request->validate([
-            'email'    => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'password' => 'required|string|min:5',
         ]);
 
         // Login checking
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('username', 'password');
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             if ($user->hasRole('administrator')) {

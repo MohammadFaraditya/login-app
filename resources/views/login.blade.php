@@ -29,8 +29,8 @@
                                 <form action="{{ route('loginProcess') }}" method="POST">
                                     @csrf
                                     <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="username" name="email">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="text" class="form-control" id="username" name="username">
                                         @error('username')
                                             <small style="color: red">{{ $message }}</small>
                                         @enderror

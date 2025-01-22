@@ -17,11 +17,13 @@ class CRUDuserController extends Controller
 
     public function AddUser(Request $request)
     {
-        // Validasi input tanpa validasi unik
+        // Validasi input
         $validator = Validator::make($request->all(), [
-            'username'   => 'required',
-            'selectRole' => 'required',
-            'password'   => 'required|min:6',
+            'username'     => 'required',
+            'email'        => 'required',
+            'selectRole'   => 'required|array',    // Pastikan selectRole adalah array
+            'selectRole.*' => 'exists:roles,name', // Pastikan setiap role ada di database
+            'password'     => 'required|min:6',
         ]);
 
         if ($validator->fails()) {
@@ -32,28 +34,98 @@ class CRUDuserController extends Controller
         $existingUser = User::where('email', $request->email)->first();
         if ($existingUser) {
             // Jika username sudah ada, kembalikan dengan pesan error
-            return redirect()->back()->withInput()->with('error', 'Email tersebut sudah dipakai, silakan gunakan email lain.');
+            return redirect()->back()->withInput()->with('error', 'Email tersebut sudah dipakai, silakan gunakan Email lain.');
         }
 
         // Siapkan data untuk disimpan
         $data['id']       = 'AST-' . time() . '-' . rand(1000, 9999);
-        $data['name']     = $request->nameUser;
         $data['email']    = $request->email;
+        $data['username'] = $request->username;
         $data['password'] = Hash::make($request->password);
 
         // Buat pengguna baru
         $user = User::create($data);
 
-                                          // Assign role ke user
-        $roleName = $request->selectRole; // Role dari input
-        $role     = Role::where('name', $roleName)->first();
-
-        if ($role) {
-            $user->assignRole($roleName); // Memberikan role ke user
-        } else {
-            return redirect()->back()->with('error', 'Role tidak ditemukan!');
+        // Menangani assign multiple role
+        foreach ($request->selectRole as $roleName) {
+            $role = Role::where('name', $roleName)->first();
+            if ($role) {
+                $user->assignRole($roleName); // Menambahkan role ke user
+            }
         }
 
         return redirect('dashboard')->with('success', 'User berhasil ditambahkan!');
     }
+
+    public function DeleteUser($id)
+    {
+        // Cek apakah user ada
+        $user = User::find($id);
+        if (! $user) {
+            return redirect()->route('dashboard')->with('error', 'User tidak ditemukan.');
+        }
+
+        // Hapus user
+        $user->delete();
+
+        return redirect()->route('dashboard')->with('success', 'User berhasil dihapus.');
+    }
+
+    public function ShowFormEditUser($id)
+    {
+        $user = User::findOrFail($id); // Ambil data user berdasarkan ID
+        $role = Role::all();           // Ambil semua data role, jika ada model Role
+
+        return view('FormEditUser', compact('user', 'role'));
+    }
+
+    public function EditUser(Request $request, $id)
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'username'     => 'required',
+            'email'        => 'required',
+            'selectRole'   => 'required|array',    // Pastikan selectRole adalah array
+            'selectRole.*' => 'exists:roles,name', // Pastikan setiap role ada di database
+            'password'     => 'nullable|min:6',    // Password bersifat opsional
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        try {
+            // Ambil user berdasarkan ID
+            $user = User::findOrFail($id);
+
+            // Ambil data yang sudah divalidasi
+            $validatedData = $validator->validated();
+
+            // Update data user
+            $user->username = $validatedData['username'];
+            $user->email    = $validatedData['email'];
+
+            // Update password jika diisi
+            if (! empty($validatedData['password'])) {
+                $user->password = bcrypt($validatedData['password']);
+            }
+
+            // Ambil role_id berdasarkan nama role yang dipilih
+            $roleIds = Role::whereIn('name', $validatedData['selectRole'])
+                ->pluck('id'); // Ambil hanya kolom 'id'
+
+                                            // Sinkronisasi role berdasarkan ID
+            $user->roles()->sync($roleIds); // Sinkronisasi dengan ID role
+
+            // Simpan perubahan
+            $user->save();
+
+            // Redirect dengan pesan sukses
+            return redirect()->route('dashboard')->with('success', 'User updated successfully!');
+        } catch (\Exception $e) {
+            // Tangani error dan redirect dengan pesan error
+            return redirect()->back()->with('error', 'Failed to update user: ' . $e->getMessage());
+        }
+    }
+
 }
