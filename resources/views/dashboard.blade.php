@@ -34,6 +34,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Name</th>
+                                                        <th>Email</th>
                                                         <th>Role</th>
                                                         <th>Actions</th>
                                                     </tr>
@@ -41,7 +42,8 @@
                                                 <tbody>
                                                     @foreach ($users as $user)
                                                         <tr>
-                                                            <td>{{ $user->username }}</td>
+                                                            <td>{{ $user->name }}</td>
+                                                            <td>{{ $user->email }}</td>
                                                             <td>{{ implode(', ', $user->getRoleNames()->toArray()) }}</td>
                                                             <td>
                                                                 <!-- Edit Button -->

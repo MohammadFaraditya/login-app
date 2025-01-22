@@ -20,7 +20,8 @@ class CRUDuserController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'username'     => 'required',
+            'nameUser'     => 'required',
+            'email'        => 'required',
             'selectRole'   => 'required|array',    // Pastikan selectRole adalah array
             'selectRole.*' => 'exists:roles,name', // Pastikan setiap role ada di database
             'password'     => 'required|min:6',
@@ -31,15 +32,16 @@ class CRUDuserController extends Controller
         }
 
         // Cek apakah username sudah ada di database
-        $existingUser = User::where('username', $request->username)->first();
+        $existingUser = User::where('email', $request->email)->first();
         if ($existingUser) {
             // Jika username sudah ada, kembalikan dengan pesan error
-            return redirect()->back()->withInput()->with('error', 'Username tersebut sudah dipakai, silakan gunakan username lain.');
+            return redirect()->back()->withInput()->with('error', 'Email tersebut sudah dipakai, silakan gunakan email lain.');
         }
 
         // Siapkan data untuk disimpan
         $data['id']       = 'AST-' . time() . '-' . rand(1000, 9999);
-        $data['username'] = $request->username;
+        $data['name']     = $request->nameUser;
+        $data['email']    = $request->email;
         $data['password'] = Hash::make($request->password);
 
         // Buat pengguna baru

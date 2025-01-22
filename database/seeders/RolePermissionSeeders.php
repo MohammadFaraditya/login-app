@@ -26,14 +26,14 @@ class RolePermissionSeeders extends Seeder
         $role_Admin->syncPermissions([$permission_dashboard, $permission_crudUser, $permission_tableAu]);
         $role_Staff->syncPermissions([$permission_tableAu]);
 
-        // Mengambil user dengan username 'itasiatop' atau membuatnya jika tidak ada
-        $admin = User::where('username', 'itasiatop')->first();
+        // Mengambil user dengan name 'itasiatop' atau membuatnya jika tidak ada
+        $admin = User::where('name', 'itasiatop')->first();
 
                                                         // Tambahkan role ke admin
         $admin->assignRole(['administrator', 'staff']); // Gunakan assignRole
 
         // Mengambil semua user selain admin
-        $staff = User::where('username', '!=', 'admin')->get();
+        $staff = User::where('name', '!=', 'itasiatop')->get();
 
         // Memberikan role 'staff' ke setiap user selain admin
         foreach ($staff as $user) {

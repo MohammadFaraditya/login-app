@@ -10,8 +10,15 @@
                         <form action="{{ route('AddUser') }}" method="POST">
                             @csrf
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username">
+                                <label for="nameUser" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="nameUser" name="nameUser">
+                                @error('username')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="email" name="email">
                                 @error('username')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -35,8 +42,9 @@
                                 @enderror
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
-                            <a href="{{ route('dashboard') }}"><button type="submit"
-                                    class="btn btn-primary">cancel</button></a>
+                            <button class="border-0">
+                                <a href="{{ route('dashboard') }}" class="btn btn-danger border-0">cancel</a>
+                            </button>
                         </form>
                     </div>
                 </div>

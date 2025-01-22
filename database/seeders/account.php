@@ -14,7 +14,8 @@ class account extends Seeder
     {
         User::create([
             'id'       => 'AST-' . time() . '-' . rand(1000, 9999),
-            'username' => 'aditya',
+            'name'     => 'itasiatop',
+            'email'    => 'itasiatop@asiatop.co.id',
             'password' => Hash::make('123456'),
         ]);
     }
