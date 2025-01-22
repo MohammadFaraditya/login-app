@@ -20,7 +20,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/dashboard', [DashboardController::class, 'ShowDashboard'])->name('dashboard');
         Route::get('/adduser', [CRUDuserController::class, 'ShowFormAddUser'])->name('ShowFormAddUser');
         Route::post('/adduser', [CRUDuserController::class, 'AddUser'])->name('AddUser');
-        Route::delete('/user/{id}', [CRUDuserController::class, 'DeleteUser'])->name('DeleteUser');
     });
 
     // Hanya staff
