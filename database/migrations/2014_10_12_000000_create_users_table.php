@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('username');
             $table->string('email');
             $table->string('password');
+            $table->string('pat_name')->nullable(); // Menyimpan nama PAT (opsional)
+            $table->text('pat_secret')->nullable(); // Menyimpan PAT Secret (sensitif, enkripsi akan digunakan)
+            $table->date('masa_aktif_token');
             $table->timestamps();
         });
     }

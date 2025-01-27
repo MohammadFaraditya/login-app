@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id', 'username', 'email', 'password',
+        'id', 'username', 'email', 'password', 'masa_aktif_token',
     ];
 
     /**
@@ -38,6 +38,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'pat_name'          => 'encrypted',
+        'pat_secret'        => 'encrypted',
     ];
 
     protected $primaryKey = 'id';     // Menggunakan 'id' sebagai primary key
