@@ -8,16 +8,19 @@ class TableauController extends Controller
 {
     public function redirectToTableau(Request $request)
     {
+        // Ambil user yang sedang login
         $user = auth()->user();
 
         // Ambil Personal Access Token (PAT) dari user
         $patName   = $user->pat_name;
         $patSecret = $user->pat_secret;
 
+        // Validasi apakah PAT (Personal Access Token) sudah ada
         if (! $patName || ! $patSecret) {
             return redirect()->back()->with('error', 'Tableau credentials not found.');
         }
 
+        // API URL Tableau Server dan API version
         $tableauServerUrl = config('services.tableau.url');
         $apiVersion       = '3.24';
 
@@ -31,40 +34,43 @@ class TableauController extends Controller
             'credentials' => [
                 'personalAccessTokenName'   => decrypt($patName),
                 'personalAccessTokenSecret' => decrypt($patSecret),
-                'site'                      => ['contentUrl' => 'asiatop'],
+                'site'                      => ['contentUrl' => 'asiatop'], // Ganti dengan site yang sesuai
             ],
         ]);
 
+        // Jika response gagal, return error
         if ($response->failed()) {
             return redirect()->back()->with('error', 'Failed to authenticate with Tableau.');
         }
 
-        // Cek jika konten adalah XML
+        // Mengonversi XML ke array jika response dalam format XML
         if ($response->header('Content-Type') == 'application/xml;charset=utf-8') {
-            // Mengonversi XML ke array
             $xmlContent  = simplexml_load_string($response->body());
             $jsonContent = json_encode($xmlContent);
             $data        = json_decode($jsonContent, true); // Mengubah menjadi array
         } else {
-            // Jika bukan XML, kita proses seperti biasa
+            // Jika response bukan XML, proses seperti biasa
             $data = $response->json();
         }
 
-        $authToken = $data['credentials']['@attributes']['token'] ?? null;
-        $siteId    = $data['credentials']['site']['@attributes']['id'] ?? null;
-        $userId    = $data['credentials']['user']['@attributes']['id'] ?? null;
+        // Ambil authToken, siteId, dan userId dari response
+        $authToken      = $data['credentials']['@attributes']['token'] ?? null;
+        $siteId         = $data['credentials']['site']['@attributes']['id'] ?? null;
+        $siteContentUrl = $data['credentials']['site']['@attributes']['contentUrl'] ?? 'asiatop'; // Ganti dengan contentUrl yang sesuai
 
+        // Jika authToken atau siteId tidak ditemukan, kembalikan error
         if (! $authToken || ! $siteId) {
             return redirect()->back()->with('error', 'Authentication failed or invalid response from Tableau.');
         }
 
-// Simpan authToken dan siteId ke dalam session
+        // Simpan authToken dan siteId ke dalam session
         session([
             'tableau_auth_token' => $authToken,
             'tableau_site_id'    => $siteId,
-
         ]);
-        // Redirect ke Tableau Dashboard (URL disesuaikan)
-        return redirect()->away("$tableauServerUrl/t/$siteId?token=$authToken");
+
+        $dashboardUrl = "$tableauServerUrl/t/$siteContentUrl/views/dashboard";
+
+        return view('embed', compact('dashboardUrl', 'authToken'));
     }
 }
