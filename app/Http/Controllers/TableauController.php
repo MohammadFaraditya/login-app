@@ -56,7 +56,7 @@ class TableauController extends Controller
         // Ambil authToken, siteId, dan userId dari response
         $authToken      = $data['credentials']['@attributes']['token'] ?? null;
         $siteId         = $data['credentials']['site']['@attributes']['id'] ?? null;
-        $siteContentUrl = $data['credentials']['site']['@attributes']['contentUrl'] ?? 'asiatop'; // Ganti dengan contentUrl yang sesuai
+        $siteContentUrl = $data['credentials']['site']['@attributes']['contentUrl'] ?? 'asiatop';
 
         // Jika authToken atau siteId tidak ditemukan, kembalikan error
         if (! $authToken || ! $siteId) {
@@ -69,8 +69,11 @@ class TableauController extends Controller
             'tableau_site_id'    => $siteId,
         ]);
 
-        $dashboardUrl = "$tableauServerUrl/t/$siteContentUrl/views/dashboard";
+        // Membuat URL embed Tableau dengan authToken
+        $dashboardUrl = "https://prod-apsoutheast-a.online.tableau.com/t/asiatop/views/TryRevisiINA-TKinerjaSales/Dashboard_DetailGrpItem";
+        $embedUrl     = $dashboardUrl . "?&authToken=" . $authToken . "&:iid=1";
 
-        return view('embed', compact('dashboardUrl', 'authToken'));
+        // Kembalikan view dengan embed URL untuk ditampilkan di iframe
+        return view('embed', compact('embedUrl', 'authToken'));
     }
 }

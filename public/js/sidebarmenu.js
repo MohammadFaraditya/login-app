@@ -1,12 +1,4 @@
-/*
-Template Name: Admin Template
-Author: Wrappixel
 
-File: js
-*/
-// ==============================================================
-// Auto select left navbar
-// ==============================================================
 $(function () {
     "use strict";
     var url = window.location + "";
@@ -37,7 +29,7 @@ $(function () {
         $("ul", $(this).parents("ul:first")).removeClass("in");
         $("a", $(this).parents("ul:first")).removeClass("active");
   
-        // open our new menu and add the open class
+        // open new menu and add the open class
         $(this).next("ul").addClass("in");
         $(this).addClass("active");
       } else if ($(this).hasClass("active")) {

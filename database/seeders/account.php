@@ -17,10 +17,9 @@ class account extends Seeder
             'username'         => 'aditya',
             'email'            => 'mohammadfaraditya@gmail.com',
             'password'         => Hash::make('123456'),
-            'pat_name'         => encrypt('AST001'),
-            'pat_secret'       => encrypt('vwyDiKgRQEGKlOpi8FUTww==:1Cvt88njWOdYAllurPtfzh3VgrZkc1Iq'),
-            'masa_aktif_token' => '2025-07-26',
-
+            'pat_name'         => encrypt('AST002'),
+            'pat_secret'       => encrypt('bAwjxIdeTeKCOuTySRg+mw==:IJIIj62JSb2mJHQuIZmmigobHNvkrAzX'),
+            'masa_aktif_token' => '2025-08-25',
         ]);
     }
 }
