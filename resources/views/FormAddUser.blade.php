@@ -17,13 +17,6 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="email" name="email">
-                                @error('username')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
                                 <label for="selectRole" class="form-label">Role</label>
                                 <select name="selectRole[]" id="selectRole" class="form-control" multiple>
                                     @foreach ($role as $role)

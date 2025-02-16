@@ -1,79 +1,39 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+use Firebase\JWT\JWT;
 
 class TableauController extends Controller
 {
-    public function redirectToTableau(Request $request)
+    public function ShowHomeTableAU()
     {
-        // Ambil user yang sedang login
-        $user = auth()->user();
 
-        // Ambil Personal Access Token (PAT) dari user
-        $patName   = $user->pat_name;
-        $patSecret = $user->pat_secret;
+        // Ambil data konfigurasi dari .env
+        $connectedAppClientId  = env('CONNECTED_APP_CLIENT_ID');
+        $connectedAppSecretKey = env('CONNECTED_APP_SECRET_KEY');
+        $connectedAppSecretId  = env('CONNECTED_APP_SECRET_ID');
+        $user                  = env('USER');
+        $vizUrl                = "https://prod-apsoutheast-a.online.tableau.com/t/asiatop/views/TryRevisiINA-TKinerjaSales/Dashboard_P_RSM_INA";
 
-        // Validasi apakah PAT (Personal Access Token) sudah ada
-        if (! $patName || ! $patSecret) {
-            return redirect()->back()->with('error', 'Tableau credentials not found.');
-        }
+        // Membuat JWT
+        $payload = [
+            'iss' => $connectedAppClientId,                    // Issuer: Client ID
+            'exp' => Carbon::now()->addMinutes(10)->timestamp, // Expiration time (10 menit)
+            'jti' => (string) \Str::uuid(),                    // JWT ID, menggunakan UUID
+            'aud' => 'tableau',                                // Audience
+            'sub' => $user,                                    // Subject (user)
+            'scp' => ['tableau:views:embed'],                  // Scope
+        ];
 
-        // API URL Tableau Server dan API version
-        $tableauServerUrl = config('services.tableau.url');
-        $apiVersion       = '3.24';
-
-        // Path ke file sertifikat CA
-        $certPath = storage_path('certs/cacert.pem');
-
-        // Login ke Tableau REST API dengan sertifikat
-        $response = Http::withOptions([
-            'verify' => $certPath, // Menambahkan path sertifikat
-        ])->post("$tableauServerUrl/api/$apiVersion/auth/signin", [
-            'credentials' => [
-                'personalAccessTokenName'   => decrypt($patName),
-                'personalAccessTokenSecret' => decrypt($patSecret),
-                'site'                      => ['contentUrl' => 'asiatop'], // Ganti dengan site yang sesuai
-            ],
+        // Generate JWT
+        $token = JWT::encode($payload, $connectedAppSecretKey, 'HS256', null, [
+            'kid' => $connectedAppSecretId, // Key ID
+            'iss' => $connectedAppClientId, // Issuer
         ]);
 
-        // Jika response gagal, return error
-        if ($response->failed()) {
-            return redirect()->back()->with('error', 'Failed to authenticate with Tableau.');
-        }
+        // HTML embed Tableau dengan token JWT
 
-        // Mengonversi XML ke array jika response dalam format XML
-        if ($response->header('Content-Type') == 'application/xml;charset=utf-8') {
-            $xmlContent  = simplexml_load_string($response->body());
-            $jsonContent = json_encode($xmlContent);
-            $data        = json_decode($jsonContent, true); // Mengubah menjadi array
-        } else {
-            // Jika response bukan XML, proses seperti biasa
-            $data = $response->json();
-        }
-
-        // Ambil authToken, siteId, dan userId dari response
-        $authToken      = $data['credentials']['@attributes']['token'] ?? null;
-        $siteId         = $data['credentials']['site']['@attributes']['id'] ?? null;
-        $siteContentUrl = $data['credentials']['site']['@attributes']['contentUrl'] ?? 'asiatop';
-
-        // Jika authToken atau siteId tidak ditemukan, kembalikan error
-        if (! $authToken || ! $siteId) {
-            return redirect()->back()->with('error', 'Authentication failed or invalid response from Tableau.');
-        }
-
-        // Simpan authToken dan siteId ke dalam session
-        session([
-            'tableau_auth_token' => $authToken,
-            'tableau_site_id'    => $siteId,
-        ]);
-
-        // Membuat URL embed Tableau dengan authToken
-        $dashboardUrl = "https://prod-apsoutheast-a.online.tableau.com/t/asiatop/views/TryRevisiINA-TKinerjaSales/Dashboard_DetailGrpItem";
-        $embedUrl     = $dashboardUrl . "?&authToken=" . $authToken . "&:iid=1";
-
-        // Kembalikan view dengan embed URL untuk ditampilkan di iframe
-        return view('embed', compact('embedUrl', 'authToken'));
+        return view('home', compact('vizUrl', 'token'));
     }
 }

@@ -20,7 +20,6 @@ class CRUDuserController extends Controller
         // Validasi input
         $validator = Validator::make($request->all(), [
             'username'     => 'required',
-            'email'        => 'required',
             'selectRole'   => 'required|array',    // Pastikan selectRole adalah array
             'selectRole.*' => 'exists:roles,name', // Pastikan setiap role ada di database
             'password'     => 'required|min:6',
@@ -31,15 +30,14 @@ class CRUDuserController extends Controller
         }
 
         // Cek apakah username sudah ada di database
-        $existingUser = User::where('email', $request->email)->first();
+        $existingUser = User::where('username', $request->username)->first();
         if ($existingUser) {
             // Jika username sudah ada, kembalikan dengan pesan error
-            return redirect()->back()->withInput()->with('error', 'Email tersebut sudah dipakai, silakan gunakan Email lain.');
+            return redirect()->back()->withInput()->with('error', 'Username tersebut sudah dipakai, silakan gunakan username lain.');
         }
 
         // Siapkan data untuk disimpan
         $data['id']       = 'AST-' . time() . '-' . rand(1000, 9999);
-        $data['email']    = $request->email;
         $data['username'] = $request->username;
         $data['password'] = Hash::make($request->password);
 
@@ -84,7 +82,6 @@ class CRUDuserController extends Controller
         // Validasi input
         $validator = Validator::make($request->all(), [
             'username'     => 'required',
-            'email'        => 'required',
             'selectRole'   => 'required|array',    // Pastikan selectRole adalah array
             'selectRole.*' => 'exists:roles,name', // Pastikan setiap role ada di database
             'password'     => 'nullable|min:6',    // Password bersifat opsional
@@ -103,7 +100,6 @@ class CRUDuserController extends Controller
 
             // Update data user
             $user->username = $validatedData['username'];
-            $user->email    = $validatedData['email'];
 
             // Update password jika diisi
             if (! empty($validatedData['password'])) {

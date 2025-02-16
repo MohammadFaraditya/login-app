@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CRUDuserController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TableauController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,9 +30,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Hanya staff
     Route::group(['middleware' => ['role:staff']], function () {
-        Route::get('/tableau', [HomeController::class, 'ShowHomeTableAU'])->name('homeTableAU');
+        Route::get('/hometableau', [TableauController::class, 'ShowHomeTableAU'])->name('homeTableAU');
     });
-
-    Route::get('/tableau', [TableauController::class, 'redirectToTableau'])->name('tableau');
-
 });

@@ -1,16 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layoutsTableau.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-
-<body>
-    <h1>ini halaman tableAu</h1>
-    <h1>Welcome, {{ Auth::user()->username }}</h1>
-    <a href="{{ route('logoutProcess') }}">Logout</a>
-</body>
-
-</html>
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm d-flex align-items-strech">
+            <div class="card w-100">
+                <div class="card-body">
+                    <script type="module" src="https://us-east-1.online.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+                    <tableau-viz id="tableau-viz" src="{{ $vizUrl }}" token="{{ $token }}" hide-tabs toolbar="bottom">
+                    </tableau-viz>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

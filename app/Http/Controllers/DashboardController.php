@@ -13,7 +13,6 @@ class DashboardController extends Controller
         if ($search) {
             // Filter data berdasarkan username, email, atau role
             $users = User::where('username', 'like', '%' . $search . '%')
-                ->orWhere('email', 'like', '%' . $search . '%')
                 ->orWhereHas('roles', function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
                 })

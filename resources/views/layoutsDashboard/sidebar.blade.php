@@ -24,12 +24,21 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('tableau') }}"
+                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('dashboard') }}"
                         aria-expanded="false">
                         <span class="aside-icon p-2 bg-light-primary rounded-3">
-                            <i class="ti ti-aperture fs-7 text-primary"></i>
+                            <i class="ti ti-layout-dashboard fs-7 text-primary"></i>
                         </span>
-                        <span class="hide-menu ms-2 ps-1">Tabelau</span>
+                        <span class="hide-menu ms-2 ps-1">Role</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('dashboard') }}"
+                        aria-expanded="false">
+                        <span class="aside-icon p-2 bg-light-primary rounded-3">
+                            <i class="ti ti-layout-dashboard fs-7 text-primary"></i>
+                        </span>
+                        <span class="hide-menu ms-2 ps-1">Tableau Dashboard</span>
                     </a>
                 </li>
             </ul>
