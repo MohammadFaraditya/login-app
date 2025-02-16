@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CRUDDashboardController;
 use App\Http\Controllers\CRUDuserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TableauController;
@@ -25,6 +26,11 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/edit/{id}', [CRUDuserController::class, 'ShowFormEditUser'])->name('ShowFormEditUser');
         Route::put('/edit/{id}', [CRUDuserController::class, 'EditUser'])->name('EditUser');
+
+        Route::get('/daftardashboard', [CRUDDashboardController::class, 'ShowDaftarDashboard'])->name('daftarDashboard');
+        Route::get('/addDashboard', [CRUDDashboardController::class, 'ShowFormAddDashboard'])->name('ShowFormAddDashboard');
+        Route::post('/addDashboard', [CRUDDashboardController::class, 'AddDashboard'])->name('AddDashboard');
+        Route::delete('/Dashboard/{id}', [CRUDDashboardController::class, 'DeleteDashboard'])->name('DeleteDashboard');
 
     });
 
