@@ -7,9 +7,9 @@
                 <h5 class="card-title fw-semibold mb-4">Edit User</h5>
                 <div class="card">
                     <div class="card-body">
-                        <form action="" method="POST">
+                        <form action="{{route('EditUser', $user->id)}}" method="POST">
                             @csrf
-                            @method('PUT') {{-- Gunakan method PUT untuk update --}}
+                            @method('PUT')
 
                             {{-- Input Username --}}
                             <div class="mb-3">

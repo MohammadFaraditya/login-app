@@ -24,7 +24,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('dashboard') }}"
+                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('ShowDashboardRule') }}"
                         aria-expanded="false">
                         <span class="aside-icon p-2 bg-light-primary rounded-3">
                             <i class="ti ti-layout-dashboard fs-7 text-primary"></i>

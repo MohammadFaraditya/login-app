@@ -7,14 +7,13 @@
                 <div class="card w-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-10">
-                            {{-- Table User --}}
                             <div class="container-lg">
                                 <div class="table-responsive" style="overflow: hidden;">
                                     <div class="table-wrapper">
                                         <div class="table-title mb-4">
                                             <div class="row align-items-center mb-4">
                                                 <div class="col d-flex align-items-center">
-                                                    <h2 class="me-3 mb-0">Daftar Dashboard</h2>
+                                                    <h2 class="me-3 mb-0">Daftar Role</h2>
                                                     <a href="{{ route('ShowFormAddDashboard') }}">
                                                         <button type="button" class="btn btn-info add-new">
                                                             <i class="fa fa-plus"></i> Add New
@@ -22,7 +21,6 @@
                                                     </a>
                                                 </div>
                                                 <div class="col-auto ms-auto">
-                                                    {{-- Search Form --}}
                                                     <form method="GET" action="{{ route('daftarDashboard') }}" class="d-flex">
                                                         <input type="search" name="search" id="search-focus"
                                                             class="form-control me-2" style="width: 50%;"
@@ -39,18 +37,18 @@
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>Nama Dashboard</th>
-                                                        <th>Link</th>
+                                                        <th>Nama Role</th>
+                                                        <th>Akses</th>
                                                         <th>Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($permissions as $permissions)
+                                                    @foreach ($role as $role)
                                                         <tr>
                                                             <td>{{ $permissions->name }}</td>
                                                             <td>{{ $permissions->table }}</td>
                                                             <td>
-                                                                <a href="{{ route('ShowFormEditUser', $permissions->id) }}"
+                                                                <a href="{{ route('ShowFormEditDashboard', $permissions->id) }}"
                                                                     class="btn btn-warning">
                                                                     Edit
                                                                 </a>

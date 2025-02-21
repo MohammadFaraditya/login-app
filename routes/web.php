@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CRUDDashboardController;
+use App\Http\Controllers\CRUDRoleController;
 use App\Http\Controllers\CRUDuserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TableauController;
@@ -31,6 +32,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/addDashboard', [CRUDDashboardController::class, 'ShowFormAddDashboard'])->name('ShowFormAddDashboard');
         Route::post('/addDashboard', [CRUDDashboardController::class, 'AddDashboard'])->name('AddDashboard');
         Route::delete('/Dashboard/{id}', [CRUDDashboardController::class, 'DeleteDashboard'])->name('DeleteDashboard');
+
+        Route::get('/editDashboard/{id}', [CRUDDashboardController::class, 'ShowFormEditDashboard'])->name('ShowFormEditDashboard');
+        Route::put('/editDashboard/{id}', [CRUDDashboardController::class, 'EditDashboard'])->name('EditDashboard');
+
+        Route::get('/role', [CRUDRoleController::class, 'ShowDashboardRule'])->name('ShowDashboardRule');
 
     });
 

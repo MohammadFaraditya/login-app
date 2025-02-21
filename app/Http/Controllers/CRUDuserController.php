@@ -12,7 +12,7 @@ class CRUDuserController extends Controller
     public function ShowFormAddUser()
     {
         $role = Role::all();
-        return view('FormAddUser', compact('role'));
+        return view('dashboardAdministrator.dashboardUser.FormAddUser', compact('role'));
     }
 
     public function AddUser(Request $request)
@@ -52,7 +52,7 @@ class CRUDuserController extends Controller
             }
         }
 
-        return redirect('dashboard')->with('success', 'User berhasil ditambahkan!');
+        return redirect()->route('dashboard')->with('success', 'User berhasil ditambahkan!');
     }
 
     public function DeleteUser($id)
@@ -74,7 +74,7 @@ class CRUDuserController extends Controller
         $user = User::findOrFail($id); // Ambil data user berdasarkan ID
         $role = Role::all();           // Ambil semua data role, jika ada model Role
 
-        return view('FormEditUser', compact('user', 'role'));
+        return view('dashboardAdministrator.dashboardUser.FormEditUser', compact('user', 'role'));
     }
 
     public function EditUser(Request $request, $id)

@@ -16,6 +16,53 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Default untuk container-fluid */
+        @media (min-width: 961px) {
+            #container-home {
+                max-width: 960px;
+                margin: 0 auto;
+            }
+
+            #card {
+                height: 700px;
+            }
+        }
+
+        @media (min-width: 1141px) {
+            #container-home {
+                max-width: 1140px;
+                margin: 0 auto;
+            }
+            #card {
+                height: 750px;
+            }
+        }
+
+        /* Ketika layar lebih besar dari 1300px */
+        @media (min-width: 1301px) {
+            #container-home {
+                max-width: 1300px;
+                margin: 0 auto;
+            }
+
+            #card {
+                height: 800px;
+            }
+        }
+
+        @media (min-width: 1501px) {
+            #container-home {
+                max-width: 1600px;
+                height: 1000px;
+                margin: 0 auto;
+            }
+
+            #card {
+                height: 850px;
+            }
+        }
+    </style>
 </head>
 
 <body>
