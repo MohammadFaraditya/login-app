@@ -32,6 +32,9 @@ class CRUDDashboardController extends Controller
         $validator = Validator::make($request->all(), [
             'nameTable'     => 'required',
             'DashboardLink' => 'required',
+            'FieldRSM'      => 'required',
+            'FieldASM'      => 'required',
+            'FieldSPV'      => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -48,8 +51,12 @@ class CRUDDashboardController extends Controller
         } else {
             // Insert Dashboard
             Permission::create([
-                'name'  => $request->nameTable,
-                'table' => $request->DashboardLink,
+                'name'     => $request->nameTable,
+                'table'    => $request->DashboardLink,
+                'fieldRSM' => $request->FieldRSM,
+                'fieldASM' => $request->FieldASM,
+                'fieldSPV' => $request->FieldSPV,
+
             ]);
 
             // Redirect after successful insertion
@@ -83,6 +90,9 @@ class CRUDDashboardController extends Controller
         $validator = Validator::make($request->all(), [
             'DashboardName' => 'required',
             'DashboardLink' => 'required',
+            'FieldRSM'      => 'required',
+            'FieldASM'      => 'required',
+            'FieldSPV'      => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -112,9 +122,11 @@ class CRUDDashboardController extends Controller
                 return redirect()->back()->withInput()->with('error', 'Link Dashboard sudah terdaftar');
             }
 
-            $permissions->name  = $validateData['DashboardName'];
-            $permissions->table = $validateData['DashboardLink'];
-
+            $permissions->name     = $validateData['DashboardName'];
+            $permissions->table    = $validateData['DashboardLink'];
+            $permissions->fieldRSM = $validateData['FieldRSM'];
+            $permissions->fieldASM = $validateData['FieldASM'];
+            $permissions->fieldSPV = $validateData['FieldSPV'];
             $permissions->save();
 
             return redirect()->route('daftarDashboard')->with('success', 'Success Update Dashboard');

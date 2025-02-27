@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('username');
             $table->string('password');
+            $table->string('jabatan')->nullable();
             $table->timestamps();
         });
     }

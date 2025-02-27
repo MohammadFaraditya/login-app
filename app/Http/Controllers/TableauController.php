@@ -14,7 +14,7 @@ class TableauController extends Controller
         $connectedAppSecretKey = env('CONNECTED_APP_SECRET_KEY');
         $connectedAppSecretId  = env('CONNECTED_APP_SECRET_ID');
         $user                  = env('USER');
-        $vizUrl                = "https://prod-apsoutheast-a.online.tableau.com/t/asiatop/views/TryRevisiINA-TKinerjaSales/Dashboard_P_RSM_INA";
+        $vizUrl                = "https://prod-apsoutheast-a.online.tableau.com/t/asiatop/views/AnalisaKinerjaSalesASWExcelV_2/Dashboard_P_RSM_ASW";
 
         // Membuat JWT
         $payload = [

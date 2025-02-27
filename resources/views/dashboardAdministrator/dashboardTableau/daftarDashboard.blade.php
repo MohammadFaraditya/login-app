@@ -1,14 +1,14 @@
 @extends('layoutsDashboard.app')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid ">
         <div class="row">
             <div class="col-sm d-flex align-items-strech">
                 <div class="card w-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-10">
                             <div class="container-lg">
-                                <div class="table-responsive" style="overflow: hidden;">
+                                <div class="table-responsive overflow-auto">
                                     <div class="table-wrapper">
                                         <div class="table-title mb-4">
                                             <div class="row align-items-center mb-4">
@@ -40,6 +40,9 @@
                                                     <tr>
                                                         <th>Nama Dashboard</th>
                                                         <th>Link</th>
+                                                        <th>Field RSM</th>
+                                                        <th>Field ASM</th>
+                                                        <th>Field SPV</th>
                                                         <th>Actions</th>
                                                     </tr>
                                                 </thead>
@@ -48,6 +51,9 @@
                                                         <tr>
                                                             <td>{{ $permissions->name }}</td>
                                                             <td>{{ $permissions->table }}</td>
+                                                            <td>{{ $permissions->fieldRSM }}</td>
+                                                            <td>{{ $permissions->fieldASM }}</td>
+                                                            <td>{{ $permissions->fieldSPV }}</td>
                                                             <td>
                                                                 <a href="{{ route('ShowFormEditDashboard', $permissions->id) }}"
                                                                     class="btn btn-warning">

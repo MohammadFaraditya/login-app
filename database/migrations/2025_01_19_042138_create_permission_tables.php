@@ -28,7 +28,9 @@ return new class extends Migration
             $table->bigIncrements('id'); // permission id
             $table->string('name');
             $table->text('table')->nullable();
-
+            $table->text('fieldRSM')->nullable();
+            $table->text('fieldASM')->nullable();
+            $table->text('fieldSPV')->nullable();
             $table->string('guard_name');
             $table->timestamps();
 

@@ -20,10 +20,37 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="DashboardLink" class="form-label">Name</label>
+                            <label for="DashboardLink" class="form-label">Link</label>
                             <input type="text" class="form-control" id="DashboardLink" name="DashboardLink"
                                 value="{{ old('Table Link', $permissions->table) }}">
                             @error('username')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="FieldRSM" class="form-label">Field RSM</label>
+                            <input type="text" class="form-control" id="FieldRSM" name="FieldRSM"
+                                value="{{ old('Table Link', $permissions->fieldRSM) }}">
+                            @error('FieldRSM')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="FieldASM" class="form-label">Field ASM</label>
+                            <input type="text" class="form-control" id="FieldASM" name="FieldASM"
+                                value="{{ old('Table Link', $permissions->fieldASM) }}">
+                            @error('FieldASM')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="FieldSPV" class="form-label">Field SPV</label>
+                            <input type="text" class="form-control" id="FieldSPV" name="FieldSPV"
+                                value="{{ old('Table Link', $permissions->fieldSPV) }}">
+                            @error('FieldSPV')
                             <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
