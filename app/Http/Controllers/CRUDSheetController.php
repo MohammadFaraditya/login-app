@@ -29,7 +29,6 @@ class CRUDSheetController extends Controller
         if ($sheet->isEmpty()) {
             $sheet = collect([]); // Mengembalikan koleksi kosong jika tidak ada sheet
         }
-
         return view('dashboardAdministrator.dashboardSheet.daftarSheet', compact('sheet', 'permission'));
     }
 
@@ -43,8 +42,9 @@ class CRUDSheetController extends Controller
     public function AddSheet(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'selectPermission' => 'required',
-            'Sheet.*'          => 'required|string', // Validasi array 'Sheet[]', setiap item harus berupa string
+            'selectPermission'   => 'required',
+            'NamaSheet.*'        => 'required|string',
+            'NamaSheetTableau.*' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -52,33 +52,100 @@ class CRUDSheetController extends Controller
         }
 
         $permissionId = $request->selectPermission;
-        $sheetNames   = $request->Sheet; // Ini adalah array Sheet[]
+        $sheetNames   = $request->NamaSheet;        // Ini adalah array
+        $tableauSheet = $request->NamaSheetTableau; // Ini adalah array
 
-        // Proses setiap sheet yang dimasukkan
-        foreach ($sheetNames as $sheetName) {
-            // Membuat ID unik untuk setiap sheet
-            $uniqueId = Str::random(8);
+// Pastikan jumlah elemen dalam kedua array sama
+        if (count($sheetNames) === count($tableauSheet)) {
+            // Proses setiap sheet yang dimasukkan
+            foreach ($sheetNames as $index => $sheetName) {
+                // Ambil tableauSheet yang sesuai dengan index
+                $sheetTableauName = $tableauSheet[$index];
 
-            // Cek apakah ID sudah ada di database
-            while (Sheet::where('idsheet', $uniqueId)->exists()) {
-                $uniqueId = Str::random(8); // Generate ID baru jika sudah ada
+                // Membuat ID unik untuk setiap sheet
+                $uniqueId = rand(1000, 9999) . rand(1000, 9999);
+
+                // Cek apakah ID sudah ada di database
+                while (Sheet::where('idsheet', $uniqueId)->exists()) {
+                    $uniqueId = Str::random(8); // Generate ID baru jika sudah ada
+                }
+
+                // Simpan sheet baru ke database
+                Sheet::create([
+                    'idsheet'       => $uniqueId,
+                    'permission_id' => $permissionId,
+                    'name'          => $sheetName,        // Nama sheet
+                    'sheetName'     => $sheetTableauName, // Sheet tableau
+                ]);
             }
-
-            // Simpan sheet baru ke database
-            Sheet::create([
-                'idsheet'       => $uniqueId,
-                'permission_id' => $permissionId, // Menyimpan ID permission yang dipilih
-                'name'          => $sheetName,    // Menyimpan nama sheet
-            ]);
+            return redirect()->route('ShowDashoardSheet')->with('success', 'Sheet berhasil ditambahkan!');
+        } else {
+            // Jika jumlah elemen tidak sama, beri pesan error atau penanganan
+            return redirect()->back()->withErrors(['error' => 'Jumlah Nama Sheet dan Sheet Tableau tidak sama!']);
         }
-
-        return redirect()->route('ShowDashoardSheet')->with('success', 'Sheet berhasil ditambahkan!');
     }
 
     public function ShowFormEditSheet($id)
     {
-        $sheet = Sheet::findOrFail($id);
+        $sheet        = Sheet::findOrFail($id);
+        $permissionid = Permission::where('id', $sheet->permission_id)->first();
+        $permission   = Permission::all();
+        return view('dashboardAdministrator.dashboardSheet.FormEditSheet', compact('sheet', 'permission', 'permissionid'));
+    }
 
-        return view('dashboardAdministrator.dashboardSheet.FormEditSheet', compact('sheet'));
+    public function EditSheet(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'selectPermission' => 'required',
+            'namaSheet'        => 'required',
+            'SheetTableau'     => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        try {
+            // Use the correct $id variable to find the sheet
+            $sheet = Sheet::findOrFail($id);
+            // If sheet is not found, return error
+            if (! $sheet) {
+                return redirect()->back()->with('error', 'Sheet tidak ditemukan');
+            }
+
+            $validateData = $validator->validated();
+
+            // Check if the sheet name already exists (except the current one)
+            $existingSheetName = Sheet::where('name', $validateData['namaSheet'])
+                ->where('idsheet', '!=', $id)
+                ->first();
+            if ($existingSheetName) {
+                return redirect()->back()->withInput()->with('error', 'Nama Sheet Sudah dipakai');
+            }
+
+            // Update the sheet data
+            $sheet->permission_id = $validateData['selectPermission'];
+            $sheet->name          = $validateData['namaSheet'];
+            $sheet->sheetName     = $validateData['SheetTableau'];
+
+            // Save the updated sheet
+            $sheet->save();
+
+            return redirect()->route('ShowDashoardSheet')->with('success', 'Success Update Sheet');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed Update Sheet: ' . $e->getMessage());
+        }
+    }
+
+    public function DeleteSheet($id)
+    {
+        $sheet = Sheet::findOrFail($id);
+        if (! $sheet) {
+            return redirect()->route('ShowDashoardSheet')->with('error', 'Sheet tidak ditemukan.');
+        }
+
+        $sheet->delete();
+
+        return redirect()->route('ShowDashoardSheet')->with('success', 'Sheet Berhasil Dihapus');
     }
 }

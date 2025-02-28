@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('Sheet', function (Blueprint $table) {
             $table->string('idsheet'); //
             $table->string('name');
+            $table->string('sheetName');
                                                              // Menambahkan kolom foreign key
             $table->bigInteger('permission_id')->unsigned(); // Menambahkan permission_id
 

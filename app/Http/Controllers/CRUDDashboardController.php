@@ -113,7 +113,7 @@ class CRUDDashboardController extends Controller
                 return redirect()->back()->withInput()->with('error', 'Nama Dashboard Sudah dipakai');
             }
 
-// Cek apakah link dashboard sudah digunakan, kecuali untuk dashboard yang sedang diedit
+            // Cek apakah link dashboard sudah digunakan, kecuali untuk dashboard yang sedang diedit
             $existingTableLink = Permission::where('table', $validateData['DashboardLink'])
                 ->where('id', '!=', $id) // Jangan bandingkan dengan yang sedang diedit
                 ->first();
@@ -130,10 +130,8 @@ class CRUDDashboardController extends Controller
             $permissions->save();
 
             return redirect()->route('daftarDashboard')->with('success', 'Success Update Dashboard');
-
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed update Dasboard' . $e->getMessage());
         }
     }
-
 }

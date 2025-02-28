@@ -8,7 +8,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between mb-10">
                         <div class="container-lg">
-                            <div class="table-responsive" style="overflow: hidden;">
+                            <div class="table-responsive overflow-auto">
                                 <div class="table-wrapper">
                                     <div class="table-title mb-4">
                                         <div class="row align-items-center mb-4">
@@ -40,6 +40,7 @@
                                                 <tr>
                                                     <th>Nama Dashboard</th>
                                                     <th>Nama Sheet</th>
+                                                    <th>Nama Sheet Tableau</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -50,11 +51,12 @@
                                                 <tr>
                                                     <td>{{ $permissionItem->name }}</td>
                                                     <td>{{ $sheetItem->name }}</td>
+                                                    <td>{{ $sheetItem->sheetName }}</td>
                                                     <td>
                                                         <a href="{{route( 'ShowFormEditSheet', $sheetItem->idsheet)}}" class="btn btn-warning">
                                                             Edit
                                                         </a>
-                                                        <form action="" method="POST" style="display:inline;">
+                                                        <form action="{{route('deleteSheet', $sheetItem->idsheet)}}" method="POST" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger">Delete</button>

@@ -47,7 +47,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/addSheet', [CRUDSheetController::class, 'ShowFormAddSheet'])->name('ShowFormAddSheet');
         Route::post('/addSheet', [CRUDSheetController::class, 'AddSheet'])->name('AddSheet');
         Route::get('/editSheet/{id}', [CRUDSheetController::class, 'ShowFormEditSheet'])->name('ShowFormEditSheet');
-
+        Route::put('/editSheet/{id}', [CRUDSheetController::class, 'EditSheet'])->name('EditSheet');
+        Route::delete('/Sheet/{id}', [CRUDSheetController::class, 'DeleteSheet'])->name('deleteSheet');
     });
 
     // Hanya staff

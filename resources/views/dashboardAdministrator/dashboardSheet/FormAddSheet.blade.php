@@ -26,14 +26,20 @@
                         <!-- Sheet Input Section -->
                         <div id="sheet-container">
                             <!-- Initial Sheet Input -->
-                            <div class="mb-3 d-flex align-items-center" id="sheet-1">
-                                <label for="Sheet" class="form-label me-2">Sheet</label>
-                                <input type="text" class="form-control me-2" id="Sheet" name="Sheet[]">
+                            <div class="mb-3 row" id="sheet-1">
+                                <div class="col-md-6">
+                                    <!-- Nama Sheet Label di atas Input -->
+                                    <label for="NamaSheet" class="form-label">Nama Sheet</label>
+                                    <input type="text" class="form-control" id="NamaSheet" name="NamaSheet[]">
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Sheet Tableau Label di atas Input -->
+                                    <label for="NamaSheetTableau" class="form-label">Sheet Tableau</label>
+                                    <input type="text" class="form-control" id="NamaSheetTableau" name="NamaSheetTableau[]">
+                                </div>
                                 @error('Sheet')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
-                                <!-- Remove Button (Initially Hidden) -->
-                                <button type="button" class="btn btn-danger remove-btn" style="display:none;">-</button>
                             </div>
                         </div>
 
@@ -86,13 +92,22 @@
             if (sheetCount < 10) { // batas maksimal jumlah input Sheet
                 sheetCount++;
                 const newSheetDiv = document.createElement("div");
-                newSheetDiv.classList.add("mb-3", "d-flex", "align-items-center");
+                newSheetDiv.classList.add("mb-3", "row");
                 newSheetDiv.id = "sheet-" + sheetCount;
 
                 newSheetDiv.innerHTML = `
-                        <label for="Sheet" class="form-label me-2">Sheet</label>
-                        <input type="text" class="form-control me-2" id="Sheet" name="Sheet[]">
-                        <button type="button" class="btn btn-danger remove-btn">-</button>
+                        <div class="col-md-6">
+                            <!-- Nama Sheet Label di atas Input -->
+                            <label for="NamaSheet" class="form-label">Nama Sheet</label>
+                            <input type="text" class="form-control" id="NamaSheet" name="NamaSheet[]">
+                            <button type="button" class="btn btn-danger remove-btn w-25 mt-2">-</button>
+                        </div>
+
+                        <div class="col-md-6">
+                            <!-- Sheet Tableau Label di atas Input -->
+                            <label for="NamaSheetTableau" class="form-label">Sheet Tableau</label>
+                            <input type="text" class="form-control" id="NamaSheetTableau" name="NamaSheetTableau[]">
+                        </div>
                     `;
                 sheetContainer.appendChild(newSheetDiv);
             }
