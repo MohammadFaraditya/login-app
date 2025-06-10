@@ -1,20 +1,30 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Sheet;
 use Carbon\Carbon;
 use Firebase\JWT\JWT;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
 
 class TableauController extends Controller
 {
-    public function ShowHomeTableAU()
+    // Method untuk mengambil role dan permission yang dimiliki user
+    private function getUserRolesAndPermissions()
     {
+        $user        = Auth::user();
+        $roles       = $user->getRoleNames();
+        $permissions = $user->getPermissionsViaRoles();
+        return compact('user', 'roles', 'permissions');
+    }
 
-        // Ambil data konfigurasi dari .env
+    // Method untuk membuat JWT Token
+    private function createJWTToken($user)
+    {
         $connectedAppClientId  = env('CONNECTED_APP_CLIENT_ID');
         $connectedAppSecretKey = env('CONNECTED_APP_SECRET_KEY');
         $connectedAppSecretId  = env('CONNECTED_APP_SECRET_ID');
         $user                  = env('USER');
-        $vizUrl                = "https://prod-apsoutheast-a.online.tableau.com/t/asiatop/views/AnalisaKinerjaSalesASWExcelV_2/Dashboard_P_RSM_ASW";
 
         // Membuat JWT
         $payload = [
@@ -26,14 +36,90 @@ class TableauController extends Controller
             'scp' => ['tableau:views:embed'],                  // Scope
         ];
 
-        // Generate JWT
-        $token = JWT::encode($payload, $connectedAppSecretKey, 'HS256', null, [
+        return JWT::encode($payload, $connectedAppSecretKey, 'HS256', null, [
             'kid' => $connectedAppSecretId, // Key ID
             'iss' => $connectedAppClientId, // Issuer
         ]);
+    }
 
-        // HTML embed Tableau dengan token JWT
+    // Akses tableAu pertama
+    public function ShowHomeTableAU()
+    {
+        $userData     = $this->getUserRolesAndPermissions();
+        $permissionId = $userData['permissions']->pluck('id')->toArray();
+        $user         = $userData['user'];
+        $roles        = $userData['roles'];
+        $permissions  = $userData['permissions'];
+        $sheet        = Sheet::whereIn('permission_id', $permissionId)->get();
+        $sheetFirst   = Sheet::whereIn('permission_id', $permissionId)->first();
 
-        return view('home', compact('vizUrl', 'token'));
+        $permissionsLink = Permission::find($sheetFirst->permission_id);
+
+        $role        = $roles->first(); // Ambil role pertama
+        $fieldFilter = $this->getFieldFilter($role, $permissionsLink);
+
+        $sheetName = (strpos($sheetFirst->sheetName, '.') !== false)
+        ? str_replace('.', '_', $sheetFirst->sheetName)
+        : $sheetFirst->sheetName; // Ganti titik dengan underscore
+        $vizUrl  = $permissionsLink->table;
+        $jabatan = $user->jabatan;
+
+        if (substr($vizUrl, -1) !== '/') {
+            $vizUrl .= '/';
+        }
+
+        $vizUrl .= $sheetName . '?:toolbar=no';
+        $token = $this->createJWTToken($user);
+        return view('home', compact('sheet', 'vizUrl', 'token', 'jabatan', 'fieldFilter'));
+    }
+
+    //Akses tableau selanjutnya
+    public function AccessTableau($idsheet)
+    {
+        $userData        = $this->getUserRolesAndPermissions();
+        $permissionId    = $userData['permissions']->pluck('id')->toArray();
+        $user            = $userData['user'];
+        $roles           = $userData['roles'];
+        $permissions     = $userData['permissions'];
+        $sheet           = Sheet::whereIn('permission_id', $permissionId)->get();
+        $sheetfind       = Sheet::find($idsheet);
+        $permissionsLink = Permission::find($sheetfind->permission_id);
+        $role            = $roles->first(); // Ambil role pertama
+        $fieldFilter     = $this->getFieldFilter($role, $permissionsLink);
+        $sheetName       = str_replace('.', '_', $sheetfind->sheetName); // Ganti titik dengan underscore
+        $vizUrl          = $permissionsLink->table;
+        $jabatan         = $user->jabatan;
+        if (substr($vizUrl, -1) !== '/') {
+            $vizUrl .= '/';
+        }
+
+        $vizUrl .= $sheetName;
+        $token = $this->createJWTToken($user);
+
+        return view('home', compact('sheet', 'vizUrl', 'token', 'jabatan', 'fieldFilter'));
+    }
+
+    //Fieldfileter
+    private function getFieldFilter($role, $permissions)
+    {
+        $fieldFilter = null;
+
+        // Cek apakah $permissions adalah instance dari Permission
+        if ($permissions instanceof \Spatie\Permission\Models\Permission) {
+            switch ($role) {
+                case 'ASM':
+                    // Akses langsung ke atribut fieldASM
+                    $fieldFilter = $permissions->fieldASM;
+                    break;
+                case 'RSM':
+                    $fieldFilter = $permissions->fieldRSM;
+                    break;
+                case 'SPV':
+                    $fieldFilter = $permissions->fieldSPV;
+                    break;
+            }
+        }
+
+        return $fieldFilter;
     }
 }

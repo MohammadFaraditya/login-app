@@ -28,6 +28,13 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
+                                <label for="jabatan" class="form-label">Jabatan</label>
+                                <input type="text" class="form-control" id="jabatan" name="jabatan">
+                                @error('jabatan')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password" name="password">
                                 @error('password')

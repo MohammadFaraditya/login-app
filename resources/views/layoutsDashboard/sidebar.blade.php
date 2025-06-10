@@ -1,7 +1,7 @@
 <aside class="left-sidebar">
     <div class="scroll-sidebar" data-simplebar>
         <div class="d-flex mb-2 align-items-center justify-content-between">
-            <a href="index.html" class="text-nowrap logo-img ms-0 ms-md-1">
+            <a href="{{route('dashboard')}}" class="text-nowrap logo-img ms-0 ms-md-1">
                 <img src="{{ asset('/images/logos/HomeAsiatop.png') }}" width="100" alt="">
             </a>
             <div class="close-btn  d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -24,7 +24,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('ShowDashboardRule') }}"
+                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('ShowDashboardRole') }}"
                         aria-expanded="false">
                         <span class="aside-icon p-2 bg-light-primary rounded-3">
                             <i class="ti ti-layout-dashboard fs-7 text-primary"></i>

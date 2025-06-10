@@ -17,6 +17,7 @@ class CRUDuserController extends Controller
 
     public function AddUser(Request $request)
     {
+
         // Validasi input
         $validator = Validator::make($request->all(), [
             'username'     => 'required',
@@ -40,6 +41,7 @@ class CRUDuserController extends Controller
         $data['id']       = 'AST-' . time() . '-' . rand(1000, 9999);
         $data['username'] = $request->username;
         $data['password'] = Hash::make($request->password);
+        $data['jabatan']  = $request->jabatan;
 
         // Buat pengguna baru
         $user = User::create($data);
@@ -112,6 +114,8 @@ class CRUDuserController extends Controller
 
                                             // Sinkronisasi role berdasarkan ID
             $user->roles()->sync($roleIds); // Sinkronisasi dengan ID role
+
+            $user->jabatan = $request->jabatan;
 
             // Simpan perubahan
             $user->save();

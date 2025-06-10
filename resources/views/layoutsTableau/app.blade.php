@@ -31,7 +31,7 @@
 
         @media (min-width: 1141px) {
             #container-home {
-                max-width: 1140px;
+                max-width: 1100px;
                 margin: 0 auto;
             }
             #card {

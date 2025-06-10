@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Models\Sheet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 
 class CRUDSheetController extends Controller
@@ -67,7 +66,7 @@ class CRUDSheetController extends Controller
 
                 // Cek apakah ID sudah ada di database
                 while (Sheet::where('idsheet', $uniqueId)->exists()) {
-                    $uniqueId = Str::random(8); // Generate ID baru jika sudah ada
+                    $uniqueId = rand(1000, 9999) . rand(1000, 9999); // Generate ID baru jika sudah ada
                 }
 
                 // Simpan sheet baru ke database

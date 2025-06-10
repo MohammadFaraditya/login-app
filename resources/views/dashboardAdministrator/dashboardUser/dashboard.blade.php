@@ -41,6 +41,7 @@
                                                     <tr>
                                                         <th>Username</th>
                                                         <th>Role</th>
+                                                        <th>Jabatan</th>
                                                         <th>Actions</th>
                                                     </tr>
                                                 </thead>
@@ -49,6 +50,7 @@
                                                         <tr>
                                                             <td>{{ $user->username }}</td>
                                                             <td>{{ implode(', ', $user->getRoleNames()->toArray()) }}</td>
+                                                            <td>{{$user->jabatan}}</td>
                                                             <td>
                                                                 <a href="{{ route('ShowFormEditUser', $user->id) }}"
                                                                     class="btn btn-warning">

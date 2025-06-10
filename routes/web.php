@@ -40,7 +40,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/editDashboard/{id}', [CRUDDashboardController::class, 'EditDashboard'])->name('EditDashboard');
         // END CRUD Dashboard Tableau
 
-        Route::get('/role', [CRUDRoleController::class, 'ShowDashboardRule'])->name('ShowDashboardRule');
+        // CRUD ROLE
+        Route::get('/role', [CRUDRoleController::class, 'ShowDashboardRole'])->name('ShowDashboardRole');
+        Route::get('/addRole', [CRUDRoleController::class, 'ShowFormAddRole'])->name('ShowFormAddRole');
+        Route::post('/addRole', [CRUDRoleController::class, 'addRole'])->name('addRole');
+        Route::get('/editRole/{id}', [CRUDRoleController::class, 'ShowFormEditRole'])->name('ShowFormEditRole');
+        Route::put('/editRole/{id}', [CRUDRoleController::class, 'EditRole'])->name('EditRole');
+        Route::delete('/deleteRole/{id}', [CRUDRoleController::class, 'DeleteRole'])->name('deleteRole');
+        // END CRUD ROLE
 
         // CRUD Sheet Dashboard
         Route::get('/sheet', [CRUDSheetController::class, 'ShowDashboardSheet'])->name('ShowDashoardSheet');
@@ -49,10 +56,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/editSheet/{id}', [CRUDSheetController::class, 'ShowFormEditSheet'])->name('ShowFormEditSheet');
         Route::put('/editSheet/{id}', [CRUDSheetController::class, 'EditSheet'])->name('EditSheet');
         Route::delete('/Sheet/{id}', [CRUDSheetController::class, 'DeleteSheet'])->name('deleteSheet');
+        //END CRUD Sheet Dashboard
     });
 
     // Hanya staff
-    Route::group(['middleware' => ['role:staff']], function () {
+    Route::group(['middleware' => ['not_admin']], function () {
         Route::get('/hometableau', [TableauController::class, 'ShowHomeTableAU'])->name('homeTableAU');
+        Route::get('/accessTableau/{idsheet}', [TableauController::class, 'AccessTableau'])->name('accessTableau');
     });
+
 });

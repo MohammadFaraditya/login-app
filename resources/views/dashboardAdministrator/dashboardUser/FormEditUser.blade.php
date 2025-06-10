@@ -10,8 +10,6 @@
                         <form action="{{route('EditUser', $user->id)}}" method="POST">
                             @csrf
                             @method('PUT')
-
-                            {{-- Input Username --}}
                             <div class="mb-3">
                                 <label for="username" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="username" name="username"
@@ -33,6 +31,15 @@
                                     @endforeach
                                 </select>
                                 @error('selectRole')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="jabatan" class="form-label">Jabatan</label>
+                                <input type="text" class="form-control" id="jabatan" name="jabatan"
+                                    value="{{ old('jabatan', $user->jabatan) }}"> {{-- Pre-fill data user --}}
+                                @error('username')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>

@@ -1,4 +1,4 @@
-@extends('layoutsTableau.app')
+@extends('layoutsDashboard.app')
 
 @section('content')
     <div class="container-fluid">
@@ -24,21 +24,21 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="FieldRSM" class="form-label">FieldRSM</label>
+                                <label for="FieldRSM" class="form-label">Field RSM</label>
                                 <input type="text" class="form-control" id="FieldRSM" name="FieldRSM">
                                 @error('FieldRSM')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="FieldASM" class="form-label">FieldRSM</label>
+                                <label for="FieldASM" class="form-label">Field ASM</label>
                                 <input type="text" class="form-control" id="FieldASM" name="FieldASM">
                                 @error('FieldASM')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="FieldSPV" class="form-label">FieldRSM</label>
+                                <label for="FieldSPV" class="form-label">Field SPV</label>
                                 <input type="text" class="form-control" id="FieldSPV" name="FieldSPV">
                                 @error('FieldSPV')
                                     <small class="text-danger">{{ $message }}</small>

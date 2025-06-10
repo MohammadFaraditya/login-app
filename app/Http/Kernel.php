@@ -23,6 +23,11 @@ class Kernel extends HttpKernel
 
     ];
 
+    protected $routeMiddleware = [
+        // Middleware lainnya
+        'not_admin' => \App\Http\Middleware\NotAdministrator::class,
+    ];
+
     /**
      * The application's route middleware groups.
      *

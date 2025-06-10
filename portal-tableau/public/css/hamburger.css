@@ -1,0 +1,62 @@
+/* Hamburger Menu Styles */
+.hamburger-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    background: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+}
+
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 24px;
+    width: 30px;
+}
+
+.hamburger .line {
+    width: 100%;
+    height: 4px;
+    background: #333;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+/* Animation for open state */
+.hamburger.open .line:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+}
+
+.hamburger.open .line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open .line:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+}
+
+/* Sidebar and Body Wrapper Transitions */
+.left-sidebar {
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(0);
+    width: 240px; /* Default sidebar width */
+}
+
+.left-sidebar.closed {
+    transform: translateX(-240px);
+}
+
+/* Adjust the body wrapper to fill space when sidebar is hidden */
+.body-wrapper {
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: 240px; /* Default margin to fit sidebar */
+}
+
+.body-wrapper.expanded {
+    margin-left: 0; /* Sidebar is closed */
+}

@@ -1,0 +1,84 @@
+@extends('layoutsTableau.app')
+
+@section('content')
+<div id="container-home">
+    <div class="row">
+        <div class="col-sm d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body">
+
+                    <!-- Dashboard -->
+                    <div id="vizContainer" style="min-height: 600px; border: 1px solid #ccc;"></div>
+
+                    <!-- Toolbar Custom: hanya tombol Fullscreen -->
+                    <div class="mt-3 d-flex">
+                        <button id="fullscreenBtn" class="btn btn-primary btn-sm">Fullscreen</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tableau JS API -->
+<script src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
+
+<script>
+    let viz;
+
+    const url = "{{ $vizUrl }}";
+    const token = "{{ $token }}";
+    const fieldFilter = "{{ $fieldFilter ?? '' }}";
+    const jabatan = "{{ $jabatan ?? '' }}";
+
+    const options = {
+        hideTabs: true,
+        hideToolbar: true,
+        ...(token && {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+    };
+
+    function initViz() {
+        const containerDiv = document.getElementById("vizContainer");
+        viz = new tableau.Viz(containerDiv, url, options);
+
+        viz.addEventListener(tableau.TableauEventName.FIRST_INTERACTIVE, async function () {
+            if (fieldFilter && jabatan) {
+                try {
+                    const sheet = viz.getWorkbook().getActiveSheet();
+                    if (sheet.getSheetType() === 'worksheet') {
+                        await sheet.applyFilterAsync(fieldFilter, jabatan, tableau.FilterUpdateType.REPLACE);
+                    } else {
+                        const worksheets = sheet.getWorksheets();
+                        for (const ws of worksheets) {
+                            try {
+                                await ws.applyFilterAsync(fieldFilter, jabatan, tableau.FilterUpdateType.REPLACE);
+                            } catch (err) {}
+                        }
+                    }
+                } catch (err) {
+                    console.error('Gagal menerapkan filter:', err);
+                }
+            }
+        });
+    }
+
+    // Tombol Fullscreen (menggunakan Fullscreen API browser)
+    document.getElementById("fullscreenBtn").addEventListener("click", () => {
+        const vizContainer = document.getElementById("vizContainer");
+        if (vizContainer.requestFullscreen) {
+            vizContainer.requestFullscreen();
+        } else if (vizContainer.webkitRequestFullscreen) {
+            vizContainer.webkitRequestFullscreen();
+        } else if (vizContainer.msRequestFullscreen) {
+            vizContainer.msRequestFullscreen();
+        }
+    });
+
+    initViz();
+</script>
+@endsection
