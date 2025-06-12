@@ -28,7 +28,7 @@ class AuthController extends Controller
             if ($user->hasRole('administrator')) {
                 return redirect()->route('dashboard');
             } else {
-                return redirect()->route('homeTableAU');
+                return redirect()->route('homeMenuTableAU');
             }
         } else {
             return redirect()->route('login')

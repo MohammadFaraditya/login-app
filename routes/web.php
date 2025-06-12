@@ -59,10 +59,11 @@ Route::group(['middleware' => ['auth']], function () {
         //END CRUD Sheet Dashboard
     });
 
-    // Hanya staff
+    // Hak akses user
     Route::group(['middleware' => ['not_admin']], function () {
         Route::get('/hometableau', [TableauController::class, 'ShowHomeTableAU'])->name('homeTableAU');
         Route::get('/accessTableau/{idsheet}', [TableauController::class, 'AccessTableau'])->name('accessTableau');
+        Route::get('/homeMenuTableau', [TableauController::class, 'ShowHomeMenuTableAU'])->name('homeMenuTableAU');
     });
 
 });

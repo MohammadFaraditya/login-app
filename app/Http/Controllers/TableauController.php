@@ -42,6 +42,14 @@ class TableauController extends Controller
         ]);
     }
 
+    public function ShowHomeMenuTableAU()
+    {
+        $userData        = $this->getUserRolesAndPermissions();
+        $permissionId    = $userData['permissions']->pluck('id')->toArray();
+        $permissionsLink = Permission::whereIn('id', $permissionId)->get();
+        return view('homeMenu', compact('permissionsLink'));
+    }
+
     // Akses tableAu pertama
     public function ShowHomeTableAU()
     {
