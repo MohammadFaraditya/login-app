@@ -57,7 +57,7 @@
                                 <div class="row ">
                                     @foreach ($permissionsLink as $menu)
                                     <div class="col-xl-6 col-lg-6">
-                                        <a href=""><div class="card bs-light:#e7ecf0">
+                                        <a href="{{route('homeTableAU', $menu->id)}}"><div class="card bs-light:#e7ecf0">
                                             <div class="card-statistic-3 p-4">
                                                 <div class="card-icon card-icon-large"><i class="fas fa-users"></i></div>
                                                 <div class="mb-4">

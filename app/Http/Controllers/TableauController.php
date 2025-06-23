@@ -51,15 +51,13 @@ class TableauController extends Controller
     }
 
     // Akses tableAu pertama
-    public function ShowHomeTableAU()
+    public function ShowHomeTableAU($idsheet)
     {
-        $userData     = $this->getUserRolesAndPermissions();
-        $permissionId = $userData['permissions']->pluck('id')->toArray();
-        $user         = $userData['user'];
-        $roles        = $userData['roles'];
-        $permissions  = $userData['permissions'];
-        $sheet        = Sheet::whereIn('permission_id', $permissionId)->get();
-        $sheetFirst   = Sheet::whereIn('permission_id', $permissionId)->first();
+        $userData   = $this->getUserRolesAndPermissions();
+        $user       = $userData['user'];
+        $roles      = $userData['roles'];
+        $sheet      = Sheet::where('permission_id', $idsheet)->get();
+        $sheetFirst = Sheet::where('permission_id', $idsheet)->first();
 
         $permissionsLink = Permission::find($sheetFirst->permission_id);
 
@@ -75,21 +73,19 @@ class TableauController extends Controller
         if (substr($vizUrl, -1) !== '/') {
             $vizUrl .= '/';
         }
-
         $vizUrl .= $sheetName . '?:toolbar=no';
         $token = $this->createJWTToken($user);
         return view('home', compact('sheet', 'vizUrl', 'token', 'jabatan', 'fieldFilter'));
     }
 
     //Akses tableau selanjutnya
-    public function AccessTableau($idsheet)
+    public function AccessTableau($idsheet, $permission_id)
     {
         $userData        = $this->getUserRolesAndPermissions();
-        $permissionId    = $userData['permissions']->pluck('id')->toArray();
         $user            = $userData['user'];
         $roles           = $userData['roles'];
         $permissions     = $userData['permissions'];
-        $sheet           = Sheet::whereIn('permission_id', $permissionId)->get();
+        $sheet           = Sheet::where('permission_id', $permission_id)->get();
         $sheetfind       = Sheet::find($idsheet);
         $permissionsLink = Permission::find($sheetfind->permission_id);
         $role            = $roles->first(); // Ambil role pertama

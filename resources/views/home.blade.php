@@ -3,6 +3,9 @@
 @section('content')
 <div class="container-fluid p-0 min-vh-100" id="container-home">
     <div class="card" id="fullscreen-card" style="margin: 0; padding: 0; border: none;">
+        <button id="fullscreenBtn" class="btn btn-primary btn-sm fullscreen-btn" style="margin-right: 5rem;">
+                    <i class="fas fa-expand"></i> Fullscreen
+    </button>
         <div class="card-body p-0 m-0">
             <div id="tableau-wrapper" class="position-relative w-100">
                 <script type="module" src="{{ asset('js/tableau.js') }}"></script>
@@ -17,10 +20,6 @@
                         <viz-filter field="{{ $fieldFilter }}" value="{{ $jabatan }}" />
                     @endisset
                 </tableau-viz>
-
-                <button id="fullscreenBtn" class="btn btn-primary btn-sm fullscreen-btn">
-                    <i class="fas fa-expand"></i> Fullscreen
-                </button>
             </div>
         </div>
     </div>
